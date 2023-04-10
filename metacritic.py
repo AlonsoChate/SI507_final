@@ -25,32 +25,32 @@ if 0:
 # For critics
 if 0:
     driver.get(BASE_URL + PATH_1)
-    reviews = driver.find_elements(By.CLASS_NAME, 'review-row')
+    reviews = driver.find_elements(By.CSS_SELECTOR, '.review.pad_top1.pad_btm1')
     for i in reviews:
-        reviewer_name = i.find_element(By.CLASS_NAME, 'display-name').text
-        review_text = i.find_element(By.CLASS_NAME, 'review-text').text
-        score_and_time = i.find_element(By.CLASS_NAME, 'original-score-and-url').text.split(' | ')
-        if len(score_and_time) != 3:
-            # if the review has no grade, discard it for now
-            break
-        score = re.findall(r"\d+\.?\d*",score_and_time[1])
-        grade = float(score[0])/float(score[1])
-        time_stamp = score_and_time[2] # Format: Mar 18, 2022
+        reviewer_name = i.find_element(By.CLASS_NAME, 'author').text
+        review_text = i.find_element(By.CLASS_NAME, 'no_hover').text
 
+        #TODO: no timestamp for critics so need to deal with it
+        score = i.find_element(By.CSS_SELECTOR, '.metascore_w.large.movie.positive.indiv.perfect').text
+        grade = float(score)/100 # critic score is out of 100
 
 # For normal audience
 if 0:
     driver.get(BASE_URL + PATH_2)
-    reviews = driver.find_elements(By.CLASS_NAME, 'audience-review-row')
+    reviews = driver.find_elements(By.CSS_SELECTOR, '.review.pad_top1')
     for i in reviews:
-        reviewer_name = i.find_element(By.CLASS_NAME, 'audience-reviews__name').text
-        review_text = i.find_element(By.CSS_SELECTOR, '.audience-reviews__review.js-review-text').text
-        time_stamp = i.find_element(By.CLASS_NAME, 'audience-reviews__duration').text # Format: Mar 18, 2022
-        
-        # score is displayed as stars, so need to convert to number format
-        score = i.find_element(By.CLASS_NAME, 'audience-reviews__score')
-        full_star = score.find_elements(By.CLASS_NAME, 'star-display__filled ')
-        half_star = score.find_elements(By.CLASS_NAME, 'star-display__half ')
-        grade = len(full_star) + 0.5*len(half_star)
+        reviewer_name = i.find_element(By.CLASS_NAME, 'author').text
+        review_text = i.find_element(By.CLASS_NAME, 'review_body').text
+        timestamp = i.find_element(By.CLASS_NAME, 'date').text # Mar 24, 2015
+        score = i.find_element(By.CSS_SELECTOR, '.metascore_w.user.large.movie.mixed.indiv').text
+        grade = float(score)/10 # normal score is out of 10
+        pass
+
+# they store url to next page so it's simple to just jump to new page
+driver.get("https://www.metacritic.com/movie/the-shawshank-redemption/user-reviews")
+next_btn = driver.find_element(By.XPATH, '//*[@id="main_content"]/div[1]/div[3]/div/div[1]/div[7]/div/div[1]/span[2]/a')
+next_url = next_btn.get_attribute('href')
+# jump to next page
+driver.get(next_url)
 
 pass
