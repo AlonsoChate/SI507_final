@@ -53,7 +53,7 @@ def get_critic_review(movie_name):
 
 
 # For normal audience
-def get_audience_review(movie_name, num=500):
+def get_audience_review(movie_name, num=100):
     driver.get(BASE_URL + movie_name + PATH_2)
     audience = []
     while(True):
@@ -83,17 +83,16 @@ def get_audience_review(movie_name, num=500):
     return audience
 
 
-def get_review_list(movie_name, num=500):
+def get_review_list(movie_name, num=100):
     # movie: movie name
     # num: number of reviews for common audience
     # check if cache is available
     filename = f'rotten_tomatoes_{movie_name}.json'
     result = loadCache(filename)
     if len(result) == 0:
-        basic_info = get_basic(movie_name)
         critic = get_critic_review(movie_name)
         audience = get_audience_review(movie_name, num)
-        result = [basic_info, critic, audience]
+        result = [critic, audience]
         storeCache(filename, result)
     return result
 
