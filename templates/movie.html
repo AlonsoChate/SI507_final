@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Movie page</title>
+    </head>
+    <body>
+        <h1>Movie info!</h1>
+        <p>
+            Movie name is {{basic[0]}}
+        </p>
+        <p>
+            <img src={{basic[2]}} width=300/>
+        </p>
+        <p>
+            Desciption: {{basic[1]}}
+        </p>
+
+        <form action="/movie/visualization" method="POST">
+            What's visualization option?
+            <select name="options">
+                <option value="Overall score distribution">Overall score distribution</option>
+                <option value="Score distirbution with time">Score distirbution with time</option>
+                <option value="">Common words</option>
+            </select>
+            <p>
+                <input type="submit" value="Confirm"/>
+            </p>
+        </form>
+
+        {% if display == 1 %}
+            <iframe src="/{{basic[0]}}_score_distribution" width="800" height="600"></iframe>
+        {% endif %}
+    </body>
+</html>

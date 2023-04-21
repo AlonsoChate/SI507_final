@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager  
 from selenium.webdriver.common.by import By
-import time
 from utility import loadCache, storeCache
 
 BASE_URL = 'https://www.metacritic.com/movie/'
@@ -13,8 +12,8 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless') # don't open windows when running the program
 service = ChromeService(executable_path=ChromeDriverManager().install())
 
-# driver = webdriver.Chrome(service=service, options=chrome_options)
-driver = webdriver.Chrome(service=service)
+driver = webdriver.Chrome(service=service, options=chrome_options)
+# driver = webdriver.Chrome(service=service)
 
 # get some overal information
 def get_basic(movie_name):
@@ -32,7 +31,6 @@ def get_critic_review(movie_name):
     for i in reviews:
         try:
             reviewer_name = i.find_element(By.CLASS_NAME, 'author').text
-            print(reviewer_name)
             review_text = i.find_element(By.CLASS_NAME, 'summary').text
 
             #no timestamp for critics, so make it empty now
@@ -65,7 +63,6 @@ def get_audience_review(movie_name, num=100):
         next_url = next_btn.get_attribute('href')
         # jump to next page
         driver.get(next_url)
-        time.sleep(1)
     return audience
 
 
@@ -73,7 +70,7 @@ def get_review_list(movie_name, num=100):
     # movie: movie name
     # num: number of reviews for common audience
     # check if cache is available
-    filename = f'metacritic_{movie_name}.json'
+    filename = f'cache/metacritic_{movie_name}.json'
     result = loadCache(filename)
     if len(result) == 0:
         critic = get_critic_review(movie_name)
@@ -83,4 +80,3 @@ def get_review_list(movie_name, num=100):
     return result
 
 movie_name = "the-shawshank-redemption"
-t = get_critic_review(movie_name)
