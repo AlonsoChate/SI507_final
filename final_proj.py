@@ -21,7 +21,7 @@ timeTree = {}
 ###########################################
 
 
-def get_review_raw_data(movie_name, num=200):
+def get_review_raw_data(movie_name, num=100):
     ''' Combine reviews from rotten tomatoes and metacritic
         if cache available, get from cache directly
     '''

@@ -55,7 +55,7 @@
                     {% if i < reviews[0] |length %}
                         <tr>
                             <td>{{reviews[1][i][0]}}</a></td>
-                            <td>{{reviews[0][i][2]}}</a></td>
+                            <td>{{reviews[1][i][2]}}</a></td>
                             <td>{{reviews[1][i][3]}}</td>
                         </tr>
                     {% endif %}
@@ -90,7 +90,7 @@
                     {% if i < reviews[0] |length %}
                         <tr>
                             <td>{{reviews[1][i][0]}}</a></td>
-                            <td>{{reviews[0][i][2]}}</a></td>
+                            <td>{{reviews[1][i][2]}}</a></td>
                             <td>{{reviews[1][i][3]}}</td>
                         </tr>
                     {% endif %}
@@ -110,19 +110,19 @@
                     <th>Words</th>
                 </tr>
                 <tr>
-                    <td><b>Critics with high score</td>
+                    <td>Critics with high score</td>
                     <td>{{words[0]}}</td>
                 </tr>
                 <tr>
-                    <td>Critics with low score</a></td>
+                    <td>Critics with low score</td>
                     <td>{{words[1]}}</td>
                 </tr>
                 <tr>
-                    <td>Audience with high score</a></td>
+                    <td>Audience with high score</td>
                     <td>{{words[2]}}</td>
                 </tr>
                 <tr>
-                    <td>Audience with low score</a></td>
+                    <td>Audience with low score</td>
                     <td>{{words[3]}}</td>
                 </tr>
             </table>
