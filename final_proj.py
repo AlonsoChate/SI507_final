@@ -97,6 +97,10 @@ def get_trees(data, movie_name):
         scoreTree, timeTree = result
 
 
+def get_trees_from_global(data, movie_name):
+    get_trees(data, movie_name)
+    return [scoreTree, timeTree]
+
 ###########################################
 #                                         #
 #   Data processing and visualization     #
