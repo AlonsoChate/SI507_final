@@ -13,13 +13,12 @@ PATH_2 = '/reviews?type=user' # path for normal audience
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless') # don't open windows when running the program
 service = ChromeService(executable_path=ChromeDriverManager().install())
-
 driver = webdriver.Chrome(service=service, options=chrome_options)
-# driver = webdriver.Chrome(service=service)
 
-# convert movie name to rotten tomatoes format
-# return None if movie not found
 def search_movie_name(movie_name):
+    ''' search movie name and get url for rottem tomatoes
+        return None if movie not found
+    '''
     search_url = "https://www.rottentomatoes.com/search?search="
     para = movie_name.replace(" ", "%20")
     url = search_url + para
@@ -28,18 +27,30 @@ def search_movie_name(movie_name):
     global BASE_URL
     BASE_URL = movie.find_element(By.TAG_NAME, "a").get_attribute('href')
 
-# get some overal information
-def get_basic(movie_name):
-    search_movie_name(movie_name)
-    driver.get(BASE_URL)
-    name = driver.find_element(By.CLASS_NAME, "scoreboard__title").text
-    figure = driver.find_element(By.XPATH, '//*[@id="topSection"]/div[1]/div[1]/tile-dynamic/img').get_attribute("src")
-    description = driver.find_element(By.XPATH, '//*[@id="movie-info"]/div/div/drawer-more/p').text
-    # release_date = driver.find_element(By.XPATH, '//*[@id="info"]/li[7]/p/span/time').text
-    return [name, description, figure]
 
-# For critics
+def get_basic(movie_name):
+    ''' Get basic movie information
+        [searched movie name, summary, movie figure]
+
+        if movie not found, return None
+    '''
+    try:
+        search_movie_name(movie_name)
+        driver.get(BASE_URL)
+        name = driver.find_element(By.CLASS_NAME, "scoreboard__title").text
+        figure = driver.find_element(By.XPATH, '//*[@id="topSection"]/div[1]/div[1]/tile-dynamic/img').get_attribute("src")
+        description = driver.find_element(By.XPATH, '//*[@id="movie-info"]/div/div/drawer-more/p').text
+        # release_date = driver.find_element(By.XPATH, '//*[@id="info"]/li[7]/p/span/time').text
+        return [name, description, figure]
+    except:
+        return None
+
+
 def get_critic_review():
+    ''' get all critic reviews in one list, need to run after search_movie_name
+        format:
+        [[name, time, score, text], ...]
+    '''
     driver.get(BASE_URL +  PATH_1)
     critic = []
     while(True):
@@ -58,16 +69,22 @@ def get_critic_review():
             except:
                 continue
         # next page
-        next_btn = driver.find_element(By.XPATH, '//*[@id="reviews"]/div[1]/rt-button[2]')
-        if(not next_btn.is_displayed()):
+        try:
+            next_btn = driver.find_element(By.XPATH, '//*[@id="reviews"]/div[1]/rt-button[2]')
+            if(not next_btn.is_displayed()):
+                break
+            next_btn.click()
+            time.sleep(1)
+        except:
             break
-        next_btn.click()
-        time.sleep(1)
     return critic
 
 
-# For normal audience
 def get_audience_review(num=100):
+    ''' get normal audience reviews in one list, need to run after search_movie_name
+        format:
+        [[name, time, score, text], ...]
+    '''
     driver.get(BASE_URL + PATH_2)
     audience = []
     while(True):
@@ -87,18 +104,23 @@ def get_audience_review(num=100):
                 audience.append(review)
             except:
                 continue
-        
         # next page
-        next_btn = driver.find_element(By.XPATH, '//*[@id="reviews"]/div[1]/rt-button[2]')
-        if(not next_btn.is_displayed() or len(audience)>num):
+        try:
+            next_btn = driver.find_element(By.XPATH, '//*[@id="reviews"]/div[1]/rt-button[2]')
+            if(not next_btn.is_displayed() or len(audience)>num):
+                break
+            next_btn.click()
+            time.sleep(1) # need to wait for data to load
+        except:
             break
-        next_btn.click()
-        time.sleep(1)
     return audience
 
 
 def get_review_list(movie_name, num=100):
-    # movie: movie name
+    ''' get list of reviews from cache if available, else scrape data from website
+        format: [[critic reviews], [andience reviews]]
+    '''
+    # movie: movie name for search
     # num: number of reviews for common audience
     # check if cache is available
     filename = f'cache/rotten_tomatoes_{movie_name}.json'

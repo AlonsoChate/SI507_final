@@ -1,33 +1,135 @@
 <html>
+    <style>
+        table, th, td{border: 1px solid black;}
+    </style>
+
     <head>
         <title>Movie page</title>
     </head>
+
     <body>
-        <h1>Movie info!</h1>
+        <h1 align="center">{{basic[0]}}</h1>
+        <p align="center"><img src={{basic[2]}} width=300/></p>
         <p>
-            Movie name is {{basic[0]}}
-        </p>
-        <p>
-            <img src={{basic[2]}} width=300/>
-        </p>
-        <p>
-            Desciption: {{basic[1]}}
+            <b>Summary:</b><br/>
+            {{basic[1]}}
         </p>
 
         <form action="/movie/visualization" method="POST">
-            What's visualization option?
+            <b>What's visualization option?</b>
             <select name="options">
+                <option value="high score review">Check reviews with high score</option>
+                <option value="low score review">Check reviews with low score</option>
                 <option value="Overall score distribution">Overall score distribution</option>
-                <option value="Score distirbution with time">Score distirbution with time</option>
-                <option value="">Common words</option>
+                <option value="Score distribution with time">Score distribution with time</option>
+                <option value="Common words">Check commonly used words</option>
             </select>
-            <p>
-                <input type="submit" value="Confirm"/>
-            </p>
+            <input type="submit" value="Confirm"/>
         </form>
-
+        
         {% if display == 1 %}
+            <table style="width:100%">
+                <tr>
+                    <th>Critics</th>
+                    <th>score</th>
+                    <th>Review</th>
+                </tr>
+                {% for i in range(10)%}
+                    {% if i < reviews[0] |length %}
+                        <tr>
+                            <td>{{reviews[0][i][0]}}</a></td>
+                            <td>{{reviews[0][i][2]}}</a></td>
+                            <td>{{reviews[0][i][3]}}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table><br/><br/>
+            
+            <table style="width:100%">
+                <tr>
+                    <th>Audience</th>
+                    <th>score</th>
+                    <th>Review</th>
+                </tr>
+                {% for i in range(10)%}
+                    {% if i < reviews[0] |length %}
+                        <tr>
+                            <td>{{reviews[1][i][0]}}</a></td>
+                            <td>{{reviews[0][i][2]}}</a></td>
+                            <td>{{reviews[1][i][3]}}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+
+        {% elif display == 2 %}
+            <table style="width:100%">
+                <tr>
+                    <th>Critics</th>
+                    <th>score</th>
+                    <th>Review</th>
+                </tr>
+                {% for i in range(10)%}
+                    {% if i < reviews[0] |length %}
+                        <tr>
+                            <td>{{reviews[0][i][0]}}</a></td>
+                            <td>{{reviews[0][i][2]}}</a></td>
+                            <td>{{reviews[0][i][3]}}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table><br/><br/>
+        
+            <table style="width:100%">
+                <tr>
+                    <th>Audience</th>
+                    <th>score</th>
+                    <th>Review</th>
+                </tr>
+                {% for i in range(10)%}
+                    {% if i < reviews[0] |length %}
+                        <tr>
+                            <td>{{reviews[1][i][0]}}</a></td>
+                            <td>{{reviews[0][i][2]}}</a></td>
+                            <td>{{reviews[1][i][3]}}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+
+        {% elif display == 3 %}
             <iframe src="/{{basic[0]}}_score_distribution" width="800" height="600"></iframe>
+
+        {% elif display == 4 %}
+            <iframe src="/{{basic[0]}}_time_distribution" width="800" height="600"></iframe>
+
+        {% elif display == 5 %}
+            <table style="width:100%">
+                <tr>
+                    <th>Category</th>
+                    <th>Words</th>
+                </tr>
+                <tr>
+                    <td><b>Critics with high score</td>
+                    <td>{{words[0]}}</td>
+                </tr>
+                <tr>
+                    <td>Critics with low score</a></td>
+                    <td>{{words[1]}}</td>
+                </tr>
+                <tr>
+                    <td>Audience with high score</a></td>
+                    <td>{{words[2]}}</td>
+                </tr>
+                <tr>
+                    <td>Audience with low score</a></td>
+                    <td>{{words[3]}}</td>
+                </tr>
+            </table>
         {% endif %}
+
+        <p>
+            <b>Back to <a href="/">home</a> page</b>
+        </p>
     </body>
 </html>

@@ -3,13 +3,21 @@
         <title>Home page</title>
     </head>
     <body>
-        <h1>Welcome!</h1>
+        <h1 align="center">Welcome to movie score visualization!</h1>
+        <p align="center">
+            This application can visualization overal distribution of review score of movies by combining data from <a href="https://www.rottentomatoes.com/">RottenTomatoes</a> and <a href="https://www.metacritic.com/">Metacritic</a>.
+        </p>
         <form action="/movie" method="POST">
-            <p>
-                What's the movie name? <input name="movie_name" type="text"><br/>
+            <p align="center">
+                What's the movie name? <input name="movie_name" type="text">
+                <input type="submit" value="Confirm"/>
             </p>
-
-            <input type="submit" value="Confirm"/>
         </form>
+
+        {% if error%}
+        <p align="center" style="color:#FF0000">
+            Oops, cannot find movie. Please search again.
+        </p>
+        {% endif %}
     </body>
 </html>

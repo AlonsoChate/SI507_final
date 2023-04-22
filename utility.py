@@ -15,7 +15,3 @@ def storeCache(filename, cache):
     contents_to_write = json.dumps(cache)
     file.write(contents_to_write)
     file.close()
-
-# could be useful for debug
-def print_review():
-    pass
